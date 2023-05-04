@@ -23,6 +23,14 @@ cd ..
 cd
 # list items in current folder
 ls
+# query size of subdirectories
+du -h --max-depth=1 ./ | sort -hr
+# query available CPU(s)
+lscpu | grep -E '^Thread|^Core|^Socket|^CPU\('
+# query free and used system memory
+free -ght
+# query total memory used per user
+ps aux | awk 'NR != 1 {x[$1] += $4} END{ for(z in x) {print z, x[z]"%"}}' | sort -k2 -r
 ```
 
 ## setup
@@ -132,8 +140,12 @@ git merge origin/main
 
 ## rewrite history
 ```bash
-# reset local and remote branches to a previous commit
 git checkout <local-branch-name>
+# undo Nth previous local commits, but keep the changes
+git reset HEAD~N
+# reset local branch to Nth previous commit
+git reset --hard HEAD~N
+# reset local and remote branches to a previous commit
 git reset --hard <sha-of-last-commit-to-keep>
 git push -f origin <remote-branch-name>
 ```
